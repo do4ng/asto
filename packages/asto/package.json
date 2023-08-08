@@ -1,0 +1,13 @@
+{
+  "name": "asto",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}

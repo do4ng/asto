@@ -1,0 +1,13 @@
+{
+  "name": "@asto/webpack",
+  "version": "0.0.0",
+  "files": [
+    "./index.d.ts",
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "devDependencies": {
+    "asto": "*",
+    "webpack": "*"
+  }
+}
