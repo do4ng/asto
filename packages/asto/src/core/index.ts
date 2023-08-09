@@ -1,5 +1,7 @@
 import { join, parse } from 'node:path';
 
+import { watch } from 'chokidar';
+
 import { BuildOptions } from '$asto/types/config';
 import { Builder, Loader, LoaderContext } from '$asto/types/loader';
 
@@ -66,7 +68,7 @@ export function createContext({
   };
 }
 
-export async function asto(options: BuildOptions) {
+export async function build(options: BuildOptions) {
   const builder = applyLoaders(options);
   const startTime = performance.now();
 
@@ -160,4 +162,38 @@ export async function asto(options: BuildOptions) {
   console.log();
   console.log();
   console.log(`Done in ${`${(performance.now() - startTime).toFixed(2)}ms`.green}`);
+}
+
+export async function asto(options: BuildOptions) {
+  if (options.watch) {
+    let watching = false;
+
+    console.clear();
+
+    console.log(`${options.entryPoints.length} entrypoints detected`.yellow.dim);
+
+    await build(options);
+
+    console.log('\nWatcher is watching..'.blue);
+
+    const watcher = watch(options.watchTarget || '.', {
+      ignored: ['dist/**/*'],
+      ...options.watchOptions,
+    });
+
+    watcher.on('change', async () => {
+      if (!watching) {
+        watching = true;
+
+        console.clear();
+        console.log(`${options.entryPoints.length} entrypoints detected`.yellow.dim);
+
+        await build(options);
+
+        watching = false;
+      }
+    });
+  } else {
+    build(options);
+  }
 }
