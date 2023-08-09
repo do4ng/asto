@@ -4,9 +4,9 @@ A tiny typescript/javascript package bundler.
 
 ---
 
-- 📦 **typescript** supported
-- 🛠️ Extendable **Loader**
-- 🔥 very tiny (**11kb**)
+- 📦 **typescript supported**
+- 🛠️ **Extendable Loader**
+- 🔥 **very tiny (9kb)**
 
 ---
 

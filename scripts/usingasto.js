@@ -17,5 +17,3 @@ asto({
     },
   ],
 });
-
-// console.log(require('../packages/asto/dist'));
