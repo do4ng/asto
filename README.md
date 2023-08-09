@@ -34,7 +34,10 @@ const { asto } = require('asto');
 const { webpackLoader } = require('@asto/webpack');
 
 asto({
-  loader: webpackLoader(),
+  loader: webpackLoader({
+    typescript: true,
+    nodeExternals: true,
+  }),
   entryPoints: [
     'src/index.ts',
     {
