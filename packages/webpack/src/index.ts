@@ -25,8 +25,8 @@ export function webpackLoader(
         mode: (process.env.NODE_ENV as any) || 'production',
         target: 'node',
 
-        ...(ctx.options || {}),
         ...(webpackOptions || {}),
+        ...(ctx.options || {}),
       };
 
       /*
