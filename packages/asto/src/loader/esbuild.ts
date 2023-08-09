@@ -33,7 +33,7 @@ export const esbuildLoader = (options?: BuildOptions) => {
   function esbuild(ctx: LoaderContext<BuildOptions>) {
     const plugins = (options?.plugins || []).concat(ctx.options?.plugins || []);
 
-    plugins.push(filenamePlugin);
+    // plugins.push(filenamePlugin);
 
     const buildOptions = {
       entryPoints: [ctx.input],
