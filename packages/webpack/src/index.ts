@@ -2,28 +2,80 @@ import { join, parse } from 'path';
 import type { BuildOutput, Loader, LoaderContext } from 'asto';
 
 import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 
-function webpackBuilder(ctx: LoaderContext<webpack.Configuration>): Promise<BuildOutput> {
-  return new Promise((resolve) => {
-    const compiler = webpack({
-      entry: ctx.input,
-      output: {
-        path: ctx.astoOptions?.out || join(process.cwd(), 'dist'),
-        filename: ctx.output || `${parse(ctx.input).name}.js`,
-      },
-      ...(ctx.options || {}),
-    });
+import { WebpackLoaderOptions } from '$webpack';
 
-    compiler.run(() => {
-      resolve({
-        success: true,
+export function webpackLoader(
+  options: WebpackLoaderOptions = {},
+  webpackOptions: webpack.Configuration = {}
+): Loader<webpack.Configuration> {
+  const webpackBuilder = (
+    ctx: LoaderContext<webpack.Configuration>
+  ): Promise<BuildOutput> =>
+    new Promise((resolve) => {
+      const buildOptions: webpack.Configuration = {
+        entry: ctx.input,
+        output: {
+          filename: ctx.output || join('dist', `${parse(ctx.input).name}.js`),
+          path: process.cwd(),
+          libraryTarget: 'umd',
+          library: 'asto',
+        },
+        mode: (process.env.NODE_ENV as any) || 'production',
+        target: 'node',
+
+        ...(ctx.options || {}),
+        ...(webpackOptions || {}),
+      };
+
+      /*
+      console.log({
+        output: {
+          // path: ctx.astoOptions?.out || join(process.cwd(), 'dist'),
+          filename: ctx.output || `${parse(ctx.input).name}.js`,
+        },
       });
-      compiler.close(() => {});
-    });
-  });
-}
+      */
 
-export function webpackLoader(): Loader<webpack.Configuration> {
+      if (options?.typescript) {
+        if (!buildOptions?.resolve) buildOptions.resolve = {};
+        if (!buildOptions?.resolve.extensions) buildOptions.resolve.extensions = [];
+        if (!buildOptions?.module) buildOptions.module = {};
+        if (!buildOptions?.module.rules) buildOptions.module.rules = [];
+
+        buildOptions.resolve.extensions.push('.ts');
+        buildOptions.resolve.extensions.push('.tsx');
+
+        buildOptions.module.rules.push({
+          test: /\.([cm]?ts|tsx)$/,
+          loader: 'ts-loader',
+          options: options?.tsloader || {},
+        });
+      }
+
+      if (options?.nodeExternals) {
+        if (!buildOptions?.externals) buildOptions.externals = [];
+        if (!buildOptions?.externalsPresets) buildOptions.externalsPresets = {};
+
+        (buildOptions.externals as Array<any>).push(nodeExternals());
+
+        buildOptions.externalsPresets.node = true;
+      }
+
+      const compiler = webpack(buildOptions);
+
+      compiler.run((err) => {
+        if (err) {
+          resolve({ success: false, reason: err });
+        }
+        resolve({
+          success: true,
+        });
+        compiler.close(() => {});
+      });
+    });
+
   return {
     name: '@asto/webpack',
     build: webpackBuilder,
