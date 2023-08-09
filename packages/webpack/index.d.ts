@@ -11,6 +11,8 @@ export interface WebpackLoaderOptions {
    * default: `true`
    */
   nodeExternals?: boolean;
+
+  stats?(stats: webpack.Stats);
 }
 
 export function webpackLoader(

@@ -65,7 +65,8 @@ export function webpackLoader(
 
       const compiler = webpack(buildOptions);
 
-      compiler.run((err) => {
+      compiler.run((err, stats) => {
+        if (options?.stats) options.stats(stats);
         if (err) {
           resolve({ success: false, reason: err });
         }
