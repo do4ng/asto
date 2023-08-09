@@ -1,6 +1,14 @@
 # Asto
 
-Esbuild based typescript/javascript package bundler.
+A tiny typescript/javascript package bundler.
+
+---
+
+- 📦 **typescript** supported
+- 🛠️ Extendable **Loader**
+- 🔥 very tiny (**11kb**)
+
+---
 
 ```
 $ npm i --save-dev asto
@@ -23,7 +31,24 @@ asto({
 });
 ```
 
+## Watch
+
+You can build whenever a file changes with the watch option.
+
+```js
+const { asto } = require('asto');
+
+asto({
+  entryPoints: [
+    /* ... */
+  ],
+  watch: true,
+});
+```
+
 ## Webpack Loader
+
+Asto's default loader is [esbuild](https://esbuild.github.io/), but you can increase stability further with the [webpack](https://webpack.js.org/) loader.
 
 ```
 $ npm i --save-dev @asto/webpack
@@ -34,13 +59,19 @@ const { asto } = require('asto');
 const { webpackLoader } = require('@asto/webpack');
 
 asto({
-  loader: webpackLoader({
-    typescript: true,
-    nodeExternals: true,
-  }),
+  loader: webpackLoader(
+    {
+      typescript: true, // for typescript
+      nodeExternals: true,
+    },
+    {
+      /* webpack options */
+    }
+  ),
   entryPoints: [
     'src/index.ts',
     {
+      // copy directory
       input: 'assets',
       output: 'dist/assets',
       builder: 'asset',
