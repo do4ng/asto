@@ -1,4 +1,3 @@
-/*
 const { join } = require('path');
 const esbuild = require('esbuild');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
@@ -13,7 +12,7 @@ const base = {
 const build = (
   pkg,
   entryPoint = 'src/index.ts',
-  out = { cjs: 'dist/index.js', esm: 'dist/index.esm.js' },
+  out = { cjs: 'dist/index.js', esm: null },
   cfg = {}
 ) => {
   console.log(join(process.cwd(), 'packages', pkg, 'package.json'));
@@ -58,7 +57,4 @@ const build = (
 };
 
 build('asto');
-
-*/
-
-require('./usingasto');
+build('webpack');
