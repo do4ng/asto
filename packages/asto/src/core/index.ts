@@ -194,6 +194,6 @@ export async function asto(options: BuildOptions) {
       }
     });
   } else {
-    build(options);
+    await build(options);
   }
 }
