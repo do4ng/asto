@@ -54,6 +54,17 @@ export function webpackLoader(
         });
       }
 
+      if (options?.cli) {
+        if (!buildOptions?.plugins) buildOptions.plugins = [];
+
+        buildOptions.plugins.push(
+          new webpack.BannerPlugin({
+            banner: '#!/usr/bin/env node',
+            raw: true,
+          })
+        );
+      }
+
       if (options?.nodeExternals) {
         if (!buildOptions?.externals) buildOptions.externals = [];
         if (!buildOptions?.externalsPresets) buildOptions.externalsPresets = {};

@@ -13,6 +13,8 @@ export interface WebpackLoaderOptions {
   nodeExternals?: boolean;
 
   stats?(stats: webpack.Stats);
+
+  cli?: boolean;
 }
 
 export function webpackLoader(
