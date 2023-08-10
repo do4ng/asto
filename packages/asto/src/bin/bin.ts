@@ -17,10 +17,19 @@ app.action((options) => {
     error('cannot load config file. (asto.config.js)');
   }
   if (options.watch) {
+    let watchOptions = {};
+
+    if (existsSync(join(process.cwd(), 'asto.watch.js'))) {
+      watchOptions = loadModule(
+        relative(__dirname, join(process.cwd(), options.config || 'asto.watch.js'))
+      );
+    }
+
     core.watch(
       loadModule(
         relative(__dirname, join(process.cwd(), options.config || 'asto.config.js'))
-      )
+      ),
+      watchOptions
     );
   } else {
     core.asto(
