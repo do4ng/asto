@@ -1,14 +1,18 @@
 {
   "name": "asto",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "repository": "https://github.com/do4ng/asto",
+  "bin": {
+    "asto": "./dist/bin.js"
+  },
   "files": [
     "dist",
     "types"
   ],
   "dependencies": {
+    "animaux": "^0.0.4",
     "chokidar": "^3.5.3",
     "colors": "^1.4.0"
   }

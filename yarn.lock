@@ -1139,6 +1139,13 @@ ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+animaux@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/animaux/-/animaux-0.0.4.tgz#46a97966c41c8ef953844922de24aaf81ff3ce79"
+  integrity sha512-dPpVuWfXF7Mu9TXBsMnpkVoQiYyKZnmBPqoGYsjsKKLm2PKpiLNBTijUoPenZ272PUrYDagzvE2oEBI+7Ra4aA==
+  dependencies:
+    colors "^1.4.0"
+
 ansi-escapes@^4.2.1:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-4.3.2.tgz#6b2291d1db7d98b6521d5f1efa42d0f3a9feb65e"

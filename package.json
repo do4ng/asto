@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build:esbuild": "node scripts/build.js",
-    "build": "node scripts/usingasto.js",
+    "build": "node packages/asto/dist/bin.js",
     "test": "jest",
     "lint-fix": "eslint --fix --ext .js,.ts ."
   },
