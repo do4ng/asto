@@ -196,7 +196,8 @@ export async function watch(
     ...watchOptions.watchOptions,
   });
 
-  watcher.on('change', async () => {
+  watcher.on('change', async (path) => {
+    if (watchOptions?.onChange) watchOptions.onChange(path);
     if (!watching) {
       watching = true;
 

@@ -36,14 +36,18 @@ asto({
 You can build whenever a file changes with the watch option.
 
 ```js
-const { asto } = require('asto');
+const { watch } = require('asto');
 
-asto({
-  entryPoints: [
-    /* ... */
-  ],
-  watch: true,
-});
+watch(
+  {
+    entryPoints: [
+      /* ... */
+    ],
+  },
+  {
+    /* watch options */
+  }
+);
 ```
 
 ## Webpack Loader

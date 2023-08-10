@@ -18,4 +18,5 @@ export interface BuildOptions {
 export interface Watcher {
   watchTarget?: string[] | string;
   watchOptions?: WatchOptions;
+  onChange?(path: string): any;
 }
