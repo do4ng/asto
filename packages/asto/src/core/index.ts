@@ -68,9 +68,8 @@ export function createContext({
   };
 }
 
-export async function build(options: BuildOptions) {
+async function buildWithOptions(options: BuildOptions) {
   const builder = applyLoaders(options);
-  const startTime = performance.now();
 
   // default loader
 
@@ -157,6 +156,18 @@ export async function build(options: BuildOptions) {
         );
       }
     }
+  }
+}
+
+export async function build(options: BuildOptions | BuildOptions[]) {
+  const startTime = performance.now();
+
+  if (Array.isArray(options)) {
+    for await (const opt of options) {
+      await buildWithOptions(opt);
+    }
+  } else {
+    await buildWithOptions(options);
   }
 
   console.log();

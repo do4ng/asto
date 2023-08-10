@@ -18,7 +18,7 @@ export function createContext({
   output: string;
 }): LoaderContext<any>;
 
-export function asto(options: BuildOptions): Promise<void>;
+export function asto(options: BuildOptions | BuildOptions[]): Promise<void>;
 export function esbuildLoader(
   options?: esbuild.BuildOptions
 ): Loader<esbuild.BuildOptions>;
