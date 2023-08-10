@@ -36,14 +36,18 @@ asto({
 You can build whenever a file changes with the watch option.
 
 ```js
-const { asto } = require('asto');
+const { watch } = require('asto');
 
-asto({
-  entryPoints: [
-    /* ... */
-  ],
-  watch: true,
-});
+watch(
+  {
+    entryPoints: [
+      /* ... */
+    ],
+  },
+  {
+    /* watch options */
+  }
+);
 ```
 
 ## Webpack Loader
@@ -51,7 +55,7 @@ asto({
 Asto's default loader is [esbuild](https://esbuild.github.io/), but you can increase stability further with the [webpack](https://webpack.js.org/) loader.
 
 ```
-$ npm i --save-dev @asto/webpack
+$ npm i --save-dev @asto/webpack webpack
 ```
 
 ```js
@@ -68,15 +72,7 @@ asto({
       /* webpack options */
     }
   ),
-  entryPoints: [
-    'src/index.ts',
-    {
-      // copy directory
-      input: 'assets',
-      output: 'dist/assets',
-      builder: 'asset',
-    },
-  ],
+  entryPoints: ['src/index.ts'],
 });
 ```
 

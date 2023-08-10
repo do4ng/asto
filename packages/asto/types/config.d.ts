@@ -13,8 +13,9 @@ export interface BuildOptions {
   entryPoints: EntryPoint[];
   out?: string;
   loader?: Loader<any> | Loader<any>[];
+}
 
-  watch?: boolean;
+export interface Watcher {
   watchTarget?: string[] | string;
   watchOptions?: WatchOptions;
 }

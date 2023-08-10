@@ -1,8 +1,8 @@
 import { join, parse } from 'node:path';
 
-import { watch } from 'chokidar';
+import chokidar from 'chokidar';
 
-import { BuildOptions } from '$asto/types/config';
+import { BuildOptions, Watcher } from '$asto/types/config';
 import { Builder, Loader, LoaderContext } from '$asto/types/loader';
 
 import { assetLoader } from '../loader/asset';
@@ -175,36 +175,36 @@ export async function build(options: BuildOptions | BuildOptions[]) {
   console.log(`Done in ${`${(performance.now() - startTime).toFixed(2)}ms`.green}`);
 }
 
-export async function asto(options: BuildOptions) {
-  if (options.watch) {
-    let watching = false;
+export async function asto(options: BuildOptions | BuildOptions[]) {
+  await build(options);
+}
 
-    console.clear();
+export async function watch(
+  options: BuildOptions | BuildOptions[],
+  watchOptions: Watcher = {}
+) {
+  let watching = false;
 
-    console.log(`${options.entryPoints.length} entrypoints detected`.yellow.dim);
+  console.clear();
 
-    await build(options);
+  await build(options);
 
-    console.log('\nWatcher is watching..'.blue);
+  console.log('\nWatcher is watching..'.blue);
 
-    const watcher = watch(options.watchTarget || '.', {
-      ignored: ['dist/**/*'],
-      ...options.watchOptions,
-    });
+  const watcher = chokidar.watch(watchOptions.watchTarget || '.', {
+    ignored: ['dist/**/*'],
+    ...watchOptions.watchOptions,
+  });
 
-    watcher.on('change', async () => {
-      if (!watching) {
-        watching = true;
+  watcher.on('change', async () => {
+    if (!watching) {
+      watching = true;
 
-        console.clear();
-        console.log(`${options.entryPoints.length} entrypoints detected`.yellow.dim);
+      console.clear();
 
-        await build(options);
+      await build(options);
 
-        watching = false;
-      }
-    });
-  } else {
-    await build(options);
-  }
+      watching = false;
+    }
+  });
 }
