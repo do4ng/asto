@@ -1,6 +1,6 @@
 {
   "name": "@asto/esm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "module": "./dist/index.mjs",
   "files": [
     "./index.d.ts",
@@ -12,6 +12,6 @@
     "asto": "*"
   },
   "dependencies": {
-    "c2es": "^0.1.1"
+    "c2es": "^0.1.2"
   }
 }
