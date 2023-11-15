@@ -84,6 +84,28 @@ asto({
 });
 ```
 
+## ESM Transformer
+
+Install a loader that converts commonjs code to esm!
+
+```
+$ npm i --save-dev @asto/esm
+```
+
+```js
+const { asto } = require('asto');
+const { esmLoader } = require('@asto/esm');
+
+asto({
+  loader: esmLoader(),
+  entryPoints: [
+    {
+      input: 'src/index.js',
+    },
+  ],
+});
+```
+
 ## License
 
 MIT
