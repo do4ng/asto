@@ -1,7 +1,8 @@
 {
   "name": "asto",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./types/index.d.ts",
   "repository": "https://github.com/do4ng/asto",
   "bin": {
