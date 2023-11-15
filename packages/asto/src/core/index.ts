@@ -79,6 +79,8 @@ async function buildWithOptions(options: BuildOptions) {
 
   let time = performance.now();
 
+  options.out = options.out || '.';
+
   const unexistBuilder = (name: string) => {
     error(`builder.${name} isn't exist.`);
   };
@@ -103,7 +105,11 @@ async function buildWithOptions(options: BuildOptions) {
           options,
           builderOptions: {},
           input: entryPoint,
-          output: join(options.out, `${parse(entryPoint).name}.js`),
+          output: join(
+            options.out,
+            parse(entryPoint).dir,
+            `${parse(entryPoint).name}.out.js`
+          ),
         })
       );
 
