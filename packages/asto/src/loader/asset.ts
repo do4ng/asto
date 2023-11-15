@@ -1,4 +1,4 @@
-import fs, { readFileSync, writeFileSync } from 'node:fs';
+import fs, { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { Loader } from '$asto/types/loader';
@@ -8,7 +8,9 @@ const copy = (src: string, dest: string, replace: Record<string, string>) => {
   const stats = exists && fs.statSync(src);
   const isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
-    fs.mkdirSync(dest);
+    if (!existsSync(dest)) {
+      fs.mkdirSync(dest);
+    }
     fs.readdirSync(src).forEach((childItemName) => {
       copy(path.join(src, childItemName), path.join(dest, childItemName), replace);
     });
