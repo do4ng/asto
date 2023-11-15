@@ -1,0 +1,17 @@
+{
+  "name": "@asto/esm",
+  "version": "0.0.0",
+  "module": "./dist/index.mjs",
+  "files": [
+    "./index.d.ts",
+    "dist"
+  ],
+  "repository": "https://github.com/do4ng/asto",
+  "main": "./dist/index.js",
+  "devDependencies": {
+    "asto": "*"
+  },
+  "dependencies": {
+    "c2es": "^0.1.0"
+  }
+}
