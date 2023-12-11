@@ -47,6 +47,10 @@ watch(
   {
     /* watch options */
   }
+).then(({ onChange }) =>
+  onChange(({ path }) => {
+    /* do something */
+  })
 );
 ```
 
@@ -87,6 +91,8 @@ asto({
 ## ESM Transformer
 
 Install a loader that converts commonjs code to esm!
+
+> warning: This loader is not suitable for package development.
 
 ```
 $ npm i --save-dev @asto/esm
