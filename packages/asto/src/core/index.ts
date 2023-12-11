@@ -211,9 +211,9 @@ export async function watch(
     if (!watching) {
       watching = true;
 
-      if (callbacks.onChange) callbacks.onChange();
-
       console.clear();
+
+      if (callbacks.onChange) await callbacks.onChange({ path });
 
       await build(options);
 
