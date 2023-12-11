@@ -189,6 +189,10 @@ export async function watch(
   options: BuildOptions | BuildOptions[],
   watchOptions: Watcher = {}
 ) {
+  const callbacks = {
+    onChange: null,
+  };
+
   let watching = false;
 
   console.clear();
@@ -207,6 +211,8 @@ export async function watch(
     if (!watching) {
       watching = true;
 
+      if (callbacks.onChange) callbacks.onChange();
+
       console.clear();
 
       await build(options);
@@ -214,4 +220,10 @@ export async function watch(
       watching = false;
     }
   });
+
+  return {
+    onChange: (callback: Function) => {
+      callbacks.onChange = callback;
+    },
+  };
 }

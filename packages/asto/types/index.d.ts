@@ -22,7 +22,7 @@ export function asto(options: BuildOptions | BuildOptions[]): Promise<void>;
 export function watch(
   options: BuildOptions | BuildOptions[],
   watchOptions?: Watcher
-): Promise<void>;
+): Promise<{ onChange: (callback: Function) => void }>;
 export function esbuildLoader(
   options?: esbuild.BuildOptions
 ): Loader<esbuild.BuildOptions>;
