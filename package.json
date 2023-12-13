@@ -1,8 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/**/*",
-    "loaders/**/*"
+    "packages/**/*"
   ],
   "devDependencies": {
     "@babel/types": "^7.22.10",
