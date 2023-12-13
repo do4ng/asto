@@ -94,8 +94,14 @@ async function buildWithOptions(options: BuildOptions) {
         unexistBuilder('build');
         return;
       }
-      const spinner = new Spinner({
+
+      const message = {
         message: `Building ${entryPoint.cyan}`,
+        loader: '[build]'.gray,
+      };
+
+      const spinner = new Spinner({
+        message: `${message.loader} ${message.message}`,
       });
 
       spinner.start();
@@ -115,13 +121,13 @@ async function buildWithOptions(options: BuildOptions) {
 
       if (result.success) {
         spinner.stop(
-          `${'✓'.green} Building ${entryPoint.cyan} ${
+          `${'success'.green} ${message.loader} ${message.message} ${
             `${(performance.now() - time).toFixed(2)}ms`.gray
           }`
         );
       } else {
         spinner.stop(
-          `${'✖'.red} Building ${entryPoint.cyan} ${
+          `${'failed'.red} ${message.loader} ${message.message} ${
             `${(performance.now() - time).toFixed(2)}ms`.gray
           }`
         );
@@ -133,8 +139,13 @@ async function buildWithOptions(options: BuildOptions) {
         return;
       }
 
-      const spinner = new Spinner({
+      const message = {
         message: `Building ${entryPoint.input.cyan}`,
+        loader: `[${entryPoint.builder}]`.gray,
+      };
+
+      const spinner = new Spinner({
+        message: `${message.loader} ${message.message}`,
       });
 
       spinner.start();
@@ -150,13 +161,13 @@ async function buildWithOptions(options: BuildOptions) {
 
       if (result.success) {
         spinner.stop(
-          `${'✓'.green} Building ${entryPoint.input.cyan} ${
+          `${'success'.green} ${message.loader} ${message.message} ${
             `${(performance.now() - time).toFixed(2)}ms`.gray
           }`
         );
       } else {
         spinner.stop(
-          `${'✖'.red} Building ${entryPoint.input.cyan} ${
+          `${'failed'.red} ${message.loader} ${message.message} ${
             `${(performance.now() - time).toFixed(2)}ms`.gray
           }`
         );
