@@ -77,7 +77,7 @@ async function buildWithOptions(options: BuildOptions) {
     builder.build = esbuildLoader().build;
   }
 
-  let time = performance.now();
+  const time = performance.now();
 
   options.out = options.out || '.';
 
@@ -85,26 +85,24 @@ async function buildWithOptions(options: BuildOptions) {
     error(`builder.${name} isn't exist.`);
   };
 
-  for await (const entryPoint of options.entryPoints) {
-    console.log();
-    time = performance.now();
+  const spinner = new Spinner({
+    message: 'Preparing...'.gray,
+  });
+  const $result = {
+    success: [],
+    failed: [],
+  };
 
+  spinner.start();
+
+  for await (const entryPoint of options.entryPoints) {
     if (typeof entryPoint === 'string') {
       if (!builder.build) {
         unexistBuilder('build');
         return;
       }
 
-      const message = {
-        message: `Building ${entryPoint.cyan}`,
-        loader: '[build]'.gray,
-      };
-
-      const spinner = new Spinner({
-        message: `${message.loader} ${message.message}`,
-      });
-
-      spinner.start();
+      spinner.edit(`Building ${entryPoint.cyan.bold}`);
 
       const result = await builder.build(
         createContext({
@@ -120,17 +118,9 @@ async function buildWithOptions(options: BuildOptions) {
       );
 
       if (result.success) {
-        spinner.stop(
-          `${'success'.green} ${message.loader} ${message.message} ${
-            `${(performance.now() - time).toFixed(2)}ms`.gray
-          }`
-        );
+        $result.success.push(entryPoint);
       } else {
-        spinner.stop(
-          `${'failed'.red} ${message.loader} ${message.message} ${
-            `${(performance.now() - time).toFixed(2)}ms`.gray
-          }`
-        );
+        $result.failed.push(entryPoint);
       }
     } else {
       if (!entryPoint.builder) entryPoint.builder = 'build';
@@ -139,16 +129,7 @@ async function buildWithOptions(options: BuildOptions) {
         return;
       }
 
-      const message = {
-        message: `Building ${entryPoint.input.cyan}`,
-        loader: `[${entryPoint.builder}]`.gray,
-      };
-
-      const spinner = new Spinner({
-        message: `${message.loader} ${message.message}`,
-      });
-
-      spinner.start();
+      spinner.edit(`Building ${entryPoint.input.cyan.bold}`);
 
       const result = await builder[entryPoint.builder](
         createContext({
@@ -160,36 +141,60 @@ async function buildWithOptions(options: BuildOptions) {
       );
 
       if (result.success) {
-        spinner.stop(
-          `${'success'.green} ${message.loader} ${message.message} ${
-            `${(performance.now() - time).toFixed(2)}ms`.gray
-          }`
-        );
+        $result.success.push(entryPoint.input);
       } else {
-        spinner.stop(
-          `${'failed'.red} ${message.loader} ${message.message} ${
-            `${(performance.now() - time).toFixed(2)}ms`.gray
-          }`
-        );
+        $result.failed.push(entryPoint.input);
       }
     }
   }
+
+  spinner.stop();
+
+  return {
+    success: $result.success,
+    failed: $result.failed,
+    time: performance.now() - time,
+  };
 }
 
 export async function build(options: BuildOptions | BuildOptions[]) {
-  const startTime = performance.now();
+  let output: { success: string[]; failed: string[]; time: number } = {
+    success: [],
+    failed: [],
+    time: 0,
+  };
 
   if (Array.isArray(options)) {
     for await (const opt of options) {
-      await buildWithOptions(opt);
+      const $output = await buildWithOptions(opt);
+
+      output.success.push(...$output.success);
+      output.failed.push(...$output.failed);
+      output.time += $output.time;
     }
   } else {
-    await buildWithOptions(options);
+    output = await buildWithOptions(options);
   }
+
+  const total = output.success.length + output.failed.length;
 
   console.log();
   console.log();
-  console.log(`Done in ${`${(performance.now() - startTime).toFixed(2)}ms`.green}`);
+
+  console.log(
+    `${' success '.green} ${`${String(output.success.length).green.bold}`}${
+      ` / ${total} files`.green.dim
+    }`
+  );
+  console.log(
+    `${' failed '.red}  ${`${String(output.failed.length).red.bold}`}${
+      ` / ${total} files`.red.dim
+    }`
+  );
+
+  console.log(`${output.failed.map((a) => ` - ${a.red}`).join('\n')}`);
+
+  console.log(`Done in ${`${output.time.toFixed(2)}ms`.green}`);
 }
 
 export async function asto(options: BuildOptions | BuildOptions[]) {
