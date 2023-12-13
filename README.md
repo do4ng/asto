@@ -1,12 +1,11 @@
-# Asto
+# 🦺 asto
 
-A tiny typescript/javascript package bundler.
+Next-gen Typescript/Javascript package bundler.
 
 ---
 
-- 📦 **typescript supported**
+- 📦 **Typescript Supported**
 - 🛠️ **Extendable Loader**
-- 🔥 **very tiny (9kb)**
 
 ---
 
@@ -92,7 +91,7 @@ asto({
 
 Install a loader that converts commonjs code to esm!
 
-> warning: This loader is not suitable for package development.
+> warning: This loader is not suitable for production.
 
 ```
 $ npm i --save-dev @asto/esm
