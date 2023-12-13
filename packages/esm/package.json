@@ -1,6 +1,6 @@
 {
   "name": "@asto/esm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "module": "./dist/index.mjs",
   "files": [
     "./index.d.ts",
