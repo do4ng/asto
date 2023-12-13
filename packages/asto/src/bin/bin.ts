@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 import animaux from 'animaux';
 import * as core from '../index';
 import loadModule from '../webpack';
-import { error } from '../logger';
+import { warn } from '../logger';
 
 const app = new animaux.Program('asto');
 
@@ -14,7 +14,7 @@ app
 
 app.action((options) => {
   if (!existsSync(join(process.cwd(), options.config || 'asto.config.js'))) {
-    error('cannot load config file. (asto.config.js)');
+    warn('cannot load config file. (asto.config.js)');
   }
   if (options.watch) {
     let watchOptions = {};
