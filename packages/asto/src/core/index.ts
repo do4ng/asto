@@ -18,7 +18,7 @@ function applyLoaders(options: BuildOptions) {
 
   const applyBuilder = (
     name: string,
-    { type, newBuilder }: { type: string; newBuilder: Builder<any> }
+    { type, newBuilder }: { type: string; newBuilder: Builder<any> },
   ) => {
     if (builder[type]) {
       error(`[loader/${name}] already existing builder (type: ${type})`);
@@ -92,6 +92,7 @@ async function buildWithOptions(options: BuildOptions) {
     success: [],
     failed: [],
   };
+  const $reason = [];
 
   spinner.start();
 
@@ -102,7 +103,7 @@ async function buildWithOptions(options: BuildOptions) {
         return;
       }
 
-      spinner.edit(`Building ${entryPoint.cyan.bold}`);
+      spinner.edit(`${'∘'.cyan} ${'[build]'.gray} Building ${entryPoint.cyan.bold}`);
 
       const result = await builder.build(
         createContext({
@@ -112,15 +113,16 @@ async function buildWithOptions(options: BuildOptions) {
           output: join(
             options.out,
             parse(entryPoint).dir,
-            `${parse(entryPoint).name}.out.js`
+            `${parse(entryPoint).name}.out.js`,
           ),
-        })
+        }),
       );
 
       if (result.success) {
         $result.success.push(entryPoint);
       } else {
         $result.failed.push(entryPoint);
+        $reason.push(result.reason);
       }
     } else {
       if (!entryPoint.builder) entryPoint.builder = 'build';
@@ -129,7 +131,9 @@ async function buildWithOptions(options: BuildOptions) {
         return;
       }
 
-      spinner.edit(`Building ${entryPoint.input.cyan.bold}`);
+      spinner.edit(
+        `${'∘'.cyan} ${'[build]'.gray} Building ${entryPoint.input.cyan.bold}`,
+      );
 
       const result = await builder[entryPoint.builder](
         createContext({
@@ -137,13 +141,14 @@ async function buildWithOptions(options: BuildOptions) {
           builderOptions: entryPoint.options,
           input: entryPoint.input,
           output: entryPoint.output,
-        })
+        }),
       );
 
       if (result.success) {
         $result.success.push(entryPoint.input);
       } else {
         $result.failed.push(entryPoint.input);
+        $reason.push(result.reason);
       }
     }
   }
@@ -153,14 +158,16 @@ async function buildWithOptions(options: BuildOptions) {
   return {
     success: $result.success,
     failed: $result.failed,
+    reason: $reason,
     time: performance.now() - time,
   };
 }
 
 export async function build(options: BuildOptions | BuildOptions[]) {
-  let output: { success: string[]; failed: string[]; time: number } = {
+  let output: { success: string[]; failed: string[]; time: number; reason: string[] } = {
     success: [],
     failed: [],
+    reason: [],
     time: 0,
   };
 
@@ -170,7 +177,10 @@ export async function build(options: BuildOptions | BuildOptions[]) {
 
       output.success.push(...$output.success);
       output.failed.push(...$output.failed);
+      output.reason.push(...$output.reason);
       output.time += $output.time;
+
+      console.log();
     }
   } else {
     output = await buildWithOptions(options);
@@ -179,20 +189,25 @@ export async function build(options: BuildOptions | BuildOptions[]) {
   const total = output.success.length + output.failed.length;
 
   console.log();
-  console.log();
+  console.log(`Build Finished. ${`(${output.time.toFixed(2)}ms)`.bold}`.gray);
 
+  // console.log('│'.gray);
   console.log(
-    `${' success '.green} ${`${String(output.success.length).green.bold}`}${
-      ` / ${total} files`.green.dim
-    }`
+    `${'├─'.gray} ${' SUCCESS '.green.bold}: ${`${
+      String(output.success.length).green.bold
+    }`}${` /${total} files`.green.dim}`,
   );
   console.log(
-    `${' failed '.red}  ${`${String(output.failed.length).red.bold}`}${
-      ` / ${total} files`.red.dim
-    }`
+    `${'└─'.gray} ${' FAILED  '.red.bold}: ${`${String(output.failed.length).red.bold}`}${
+      ` /${total} files`.red.dim
+    }`,
   );
 
-  console.log(`${output.failed.map((a) => ` - ${a.red}`).join('\n')}`);
+  console.log(
+    `${output.failed
+      .map((a, index) => ` - ${a.red.bold} - ${output.reason[index].red}`)
+      .join('\n')}`,
+  );
 
   console.log(`Done in ${`${output.time.toFixed(2)}ms`.green}`);
 }
@@ -203,7 +218,7 @@ export async function asto(options: BuildOptions | BuildOptions[]) {
 
 export async function watch(
   options: BuildOptions | BuildOptions[],
-  watchOptions: Watcher = {}
+  watchOptions: Watcher = {},
 ) {
   const callbacks = {
     onChange: null,

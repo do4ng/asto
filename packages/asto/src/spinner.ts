@@ -3,7 +3,7 @@ import 'colors';
 
 const stream = process.stdout;
 const defaultSpinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'].map(
-  (item) => item.cyan
+  (item) => item.cyan,
 );
 
 interface SpinnerOptions {
@@ -47,11 +47,17 @@ class Spinner {
     return this;
   }
 
-  stop(message: string = ''): this {
+  stop(message?: string): this {
     if (this.processor) {
       clearInterval(this.processor);
+
       this.clearLine();
-      stream.write(message);
+
+      if (message) {
+        stream.write(message);
+      } else {
+        stream.write(this.message);
+      }
     }
 
     return this;
