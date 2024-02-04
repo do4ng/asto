@@ -8,10 +8,10 @@ import { WebpackLoaderOptions } from '$webpack';
 
 export function webpackLoader(
   options: WebpackLoaderOptions = {},
-  webpackOptions: webpack.Configuration = {}
+  webpackOptions: webpack.Configuration = {},
 ): Loader<webpack.Configuration> {
   const webpackBuilder = (
-    ctx: LoaderContext<webpack.Configuration>
+    ctx: LoaderContext<webpack.Configuration>,
   ): Promise<BuildOutput> =>
     new Promise((resolve) => {
       const buildOptions: webpack.Configuration = {
@@ -61,7 +61,7 @@ export function webpackLoader(
           new webpack.BannerPlugin({
             banner: '#!/usr/bin/env node',
             raw: true,
-          })
+          }),
         );
       }
 
@@ -76,8 +76,7 @@ export function webpackLoader(
 
       const compiler = webpack(buildOptions);
 
-      compiler.run((err, stats) => {
-        if (options?.stats) options.stats(stats);
+      compiler.run((err) => {
         if (err) {
           resolve({ success: false, reason: err });
         }

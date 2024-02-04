@@ -21,21 +21,21 @@ app.action((options) => {
 
     if (existsSync(join(process.cwd(), 'asto.watch.js'))) {
       watchOptions = loadModule(
-        relative(__dirname, join(process.cwd(), options.config || 'asto.watch.js'))
+        relative(__dirname, join(process.cwd(), options.config || 'asto.watch.js')),
       );
     }
 
     core.watch(
       loadModule(
-        relative(__dirname, join(process.cwd(), options.config || 'asto.config.js'))
+        relative(__dirname, join(process.cwd(), options.config || 'asto.config.js')),
       ),
-      watchOptions
+      watchOptions,
     );
   } else {
     core.asto(
       loadModule(
-        relative(__dirname, join(process.cwd(), options.config || 'asto.config.js'))
-      )
+        relative(__dirname, join(process.cwd(), options.config || 'asto.config.js')),
+      ),
     );
   }
 });
