@@ -1,4 +1,4 @@
-const { webpackLoader } = require('@asto/webpack');
+const { esbuildLoader } = require('./packages/asto/dist');
 const { esmLoader } = require('@asto/esm');
 
 /**
@@ -6,10 +6,7 @@ const { esmLoader } = require('@asto/esm');
  */
 module.exports = [
   {
-    loader: webpackLoader({
-      typescript: true,
-      nodeExternals: true,
-    }),
+    loader: esbuildLoader({ nodeExternal: true }),
     entryPoints: [
       {
         input: './packages/asto/src/index.ts',
@@ -26,11 +23,7 @@ module.exports = [
     ],
   },
   {
-    loader: webpackLoader({
-      typescript: true,
-      nodeExternals: true,
-      cli: true,
-    }),
+    loader: esbuildLoader({ nodeExternal: true }),
     entryPoints: [
       {
         input: './packages/asto/src/bin/bin.ts',
