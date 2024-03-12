@@ -1,8 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/**/*",
-    "docs"
+    "packages/**/*"
   ],
   "devDependencies": {
     "@babel/types": "^7.22.10",
@@ -22,7 +21,6 @@
   "scripts": {
     "build:esbuild": "node scripts/build.js",
     "build": "node packages/asto/dist/bin.js",
-    "docs": "yarn workspace docs dev",
     "test": "jest",
     "lint-fix": "eslint --fix --ext .js,.ts ."
   },
